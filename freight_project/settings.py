@@ -172,9 +172,10 @@ SIMPLE_JWT = {
 }
 
 # ─── CORS ─────────────────────────────────────────────────────────────────────
-CORS_ALLOWED_ORIGINS = os.environ.get(
-    'CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000'
-).split(',')
+# Allow requests from any origin and include CORS headers on every response,
+# including preflight requests. CORS_ALLOWED_ORIGINS is not needed when
+# CORS_ALLOW_ALL_ORIGINS is True.
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 # ─── Internationalization ──────────────────────────────────────────────────────
