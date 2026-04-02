@@ -9,7 +9,7 @@ dist/
 build/
 venv/
 .venv/
-env/
+
 
 # Django
 *.log
@@ -19,7 +19,7 @@ staticfiles/
 media/
 
 # Environment
-.env
+
 
 # IDE
 .vscode/
