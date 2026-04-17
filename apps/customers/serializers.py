@@ -63,10 +63,28 @@ class CustomerDocumentSerializer(serializers.ModelSerializer):
 
 # ── Customer List ─────────────────────────────────────────────────────────────
 class CustomerListSerializer(serializers.ModelSerializer):
+    primary_contact_name = serializers.SerializerMethodField()
+    primary_contact_email = serializers.SerializerMethodField()
+
     class Meta:
         model = Customer
-        fields = ['id', 'company_name', 'business_type', 'gst', 'status',
-                  'credit_limit', 'outstanding_balance', 'created_at']
+        fields = ['id', 'company_name', 'business_type', 'legal_structure', 'gst', 'status',
+                  'credit_limit', 'outstanding_balance', 'created_at',
+                  'primary_contact_name', 'primary_contact_email']
+
+    def _primary_contact(self, obj):
+        contacts = list(obj.contacts.all())
+        if not contacts:
+            return None
+        return next((c for c in contacts if c.is_primary), contacts[0])
+
+    def get_primary_contact_name(self, obj):
+        c = self._primary_contact(obj)
+        return c.name if c else ''
+
+    def get_primary_contact_email(self, obj):
+        c = self._primary_contact(obj)
+        return c.email if c else ''
 
 
 # ── Customer Detail ───────────────────────────────────────────────────────────

@@ -34,9 +34,18 @@ class CustomerViewSet(viewsets.ModelViewSet):
         'contacts', 'addresses', 'documents'
     ).select_related('assigned_to')
     permission_classes = [IsAuthenticated]
-    search_fields = ['company_name', 'gst', 'pan', 'iec']
+    search_fields = [
+        'company_name', 'gst', 'pan', 'iec',
+        'contacts__name', 'contacts__email', 'contacts__phone',
+    ]
     ordering_fields = ['company_name', 'created_at', 'credit_limit']
     ordering = ['company_name']
+
+    def filter_queryset(self, queryset):
+        qs = super().filter_queryset(queryset)
+        if self.action == 'list' and self.request.query_params.get('search'):
+            qs = qs.distinct()
+        return qs
 
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):
